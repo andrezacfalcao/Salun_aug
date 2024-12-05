@@ -177,7 +177,8 @@ def setup_model_dataset(args):
             mean=[0.5071, 0.4866, 0.4409], std=[0.2673, 0.2564, 0.2762]
         )
         train_full_loader, val_loader, _ = cifar100_dataloaders(
-            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers
+            #batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers
+            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug
         )
         marked_loader, _, test_loader = cifar100_dataloaders(
             batch_size=args.batch_size,
