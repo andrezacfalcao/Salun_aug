@@ -67,6 +67,7 @@ def validate(val_loader, model, criterion, args):
                     )
                 )
 
-        print("valid_accuracy {top1.avg:.3f}".format(top1=top1))
+        #print("valid_accuracy {top1.avg:.3f}".format(top1=top1))
+        print("Avg Test accuracy {top1.avg:.3f}".format(top1=top1))
 
     return top1.avg

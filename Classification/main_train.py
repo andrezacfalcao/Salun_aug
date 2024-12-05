@@ -116,8 +116,12 @@ def main():
         acc = train(train_loader, model, criterion, optimizer, epoch, args)
 
         # evaluate on validation set
-        tacc = validate(val_loader, model, criterion, args)
+        #tacc = validate(val_loader, model, criterion, args)
+        tacc = validate(test_loader, model, criterion, args)
         scheduler.step()
+
+        
+        
 
         all_result["train_ta"].append(acc)
         all_result["val_ta"].append(tacc)
@@ -149,14 +153,20 @@ def main():
     plt.close()
 
     print("Performance on the test data set")
-    test_tacc = validate(val_loader, model, criterion, args)
+    #test_tacc = validate(val_loader, model, criterion, args)
+    test_tacc = validate(test_loader, model, criterion, args)
+    
+    
+
     if len(all_result["val_ta"]) != 0:
         val_pick_best_epoch = np.argmax(np.array(all_result["val_ta"]))
         print(
+            
             "* best SA = {}, Epoch = {}".format(
                 all_result["val_ta"][val_pick_best_epoch], val_pick_best_epoch + 1
             )
         )
+    
 
 if __name__ == "__main__":
     main()
