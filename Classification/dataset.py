@@ -196,7 +196,7 @@ def cifar100_dataloaders(
                 transforms.ToTensor(),
             ]
         )
-    else:
+    else: #baseline
         train_transform = transforms.Compose(
             [
                 transforms.RandomCrop(32, padding=4),
