@@ -117,7 +117,7 @@ def setup_model_dataset(args):
         )
         train_full_loader, val_loader, _ = cifar10_dataloaders(
             #batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers
-            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug
+            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug, aug_mode=args.aug_mode
         )
         marked_loader, _, test_loader = cifar10_dataloaders(
             batch_size=args.batch_size,
@@ -178,7 +178,7 @@ def setup_model_dataset(args):
         )
         train_full_loader, val_loader, _ = cifar100_dataloaders(
             #batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers
-            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug
+            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug, aug_mode=args.aug_mode
         )
         marked_loader, _, test_loader = cifar100_dataloaders(
             batch_size=args.batch_size,

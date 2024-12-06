@@ -189,6 +189,7 @@ def cifar100_dataloaders(
     only_mark: bool = False,
     shuffle=True,
     no_aug=False,
+    aug_mode=None
 ):
     if no_aug:
         train_transform = transforms.Compose(
@@ -197,13 +198,28 @@ def cifar100_dataloaders(
             ]
         )
     else: #baseline
-        train_transform = transforms.Compose(
-            [
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-            ]
-        )
+        
+        if aug_mode == "crop-flip":
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                ]
+            )
+        elif aug_mode == "crop-flip-randaug":
+            rand_augment = transforms.RandAugment(num_ops=2, magnitude=9)
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    rand_augment,
+                    transforms.ToTensor(),
+                ]
+            )
+        else:
+            print("Invalid Augmentation")
+
 
     test_transform = transforms.Compose(
         [
@@ -538,6 +554,7 @@ def cifar10_dataloaders(
     only_mark: bool = False,
     shuffle=True,
     no_aug=False,
+    aug_mode=None
 ):
     if no_aug:
         train_transform = transforms.Compose(
@@ -546,13 +563,26 @@ def cifar10_dataloaders(
             ]
         )
     else:
-        train_transform = transforms.Compose(
-            [
-                transforms.RandomCrop(32, padding=4),
-                transforms.RandomHorizontalFlip(),
-                transforms.ToTensor(),
-            ]
-        )
+        if aug_mode == "crop-flip":
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                ]
+            )
+        elif aug_mode == "crop-flip-randaug":
+            rand_augment = transforms.RandAugment(num_ops=2, magnitude=9)
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    rand_augment,
+                    transforms.ToTensor(),
+                ]
+            )
+        else:
+            print("Invalid Augmentation")
 
     test_transform = transforms.Compose(
         [
