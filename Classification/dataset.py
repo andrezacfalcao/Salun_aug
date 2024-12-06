@@ -199,7 +199,7 @@ def cifar100_dataloaders(
         )
     else: #baseline
         
-        if aug_mode == "crop-flip":
+        if aug_mode == "crop-flip" or aug_mode==None:
             train_transform = transforms.Compose(
                 [
                     transforms.RandomCrop(32, padding=4),
@@ -217,6 +217,7 @@ def cifar100_dataloaders(
                     transforms.ToTensor(),
                 ]
             )
+            print("-------------------- Tudo ok!!")
         else:
             print("Invalid Augmentation")
 
@@ -563,7 +564,7 @@ def cifar10_dataloaders(
             ]
         )
     else:
-        if aug_mode == "crop-flip":
+        if aug_mode == "crop-flip" or aug_mode==None:
             train_transform = transforms.Compose(
                 [
                     transforms.RandomCrop(32, padding=4),
@@ -581,6 +582,7 @@ def cifar10_dataloaders(
                     transforms.ToTensor(),
                 ]
             )
+            print("-------------------- tudo ok!!!!!!")
         else:
             print("Invalid Augmentation")
             print(aug_mode)
