@@ -583,6 +583,7 @@ def cifar10_dataloaders(
             )
         else:
             print("Invalid Augmentation")
+            print(aug_mode)
 
     test_transform = transforms.Compose(
         [
