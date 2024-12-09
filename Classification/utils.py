@@ -130,7 +130,10 @@ def setup_model_dataset(args):
             only_mark=True,
             shuffle=True,
             no_aug=args.no_aug,
+            aug_mode=args.aug_mode
         )
+
+
 
         if args.train_seed is None:
             args.train_seed = args.seed
@@ -191,6 +194,7 @@ def setup_model_dataset(args):
             only_mark=True,
             shuffle=True,
             no_aug=args.no_aug,
+            aug_mode=args.aug_mode
         )
         if args.imagenet_arch:
             model = model_dict[args.arch](num_classes=classes, imagenet=True)
