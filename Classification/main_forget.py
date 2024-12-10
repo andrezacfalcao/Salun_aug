@@ -149,6 +149,15 @@ def main():
         evaluation_result["accuracy"] = accuracy
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
+    UA = 100 - evaluation_result["accuracy"]["forget"]
+    print(f"UA (Unlearning Accuracy): {UA:.2f}%")
+
+    RA = evaluation_result["accuracy"]["retain"]
+    print(f"RA (Remaining Accuracy): {RA:.2f}%")
+
+    TA = evaluation_result["accuracy"]["test"]
+    print(f"TA (Testing Accuracy): {TA:.2f}%")
+
     for deprecated in ["MIA", "SVC_MIA", "SVC_MIA_forget"]:
         if deprecated in evaluation_result:
             evaluation_result.pop(deprecated)
@@ -180,6 +189,8 @@ def main():
         )
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
+    MIA = evaluation_result["SVC_MIA_forget_efficacy"]['confidence'] * 100
+    print(f"MIA (Membership Inference Attack): {MIA:.2f}")
     unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
 

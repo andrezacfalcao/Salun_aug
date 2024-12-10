@@ -154,7 +154,7 @@ def main():
         evaluation_result["accuracy"] = accuracy
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
-    import pdb; pdb.set_trace()
+    
 
     UA = 100 - evaluation_result["accuracy"]["forget"]
     print(f"UA (Unlearning Accuracy): {UA:.2f}%")
@@ -198,6 +198,8 @@ def main():
         )
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
+    MIA = evaluation_result["SVC_MIA_forget_efficacy"]['confidence'] * 100
+    print(f"MIA (Membership Inference Attack): {MIA:.2f}")
     unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
 
