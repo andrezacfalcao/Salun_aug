@@ -776,7 +776,7 @@ def medmnist_dataloaders(
         )
     
     if class_to_replace is not None:
-        import pdb; pdb.set_trace()
+        
         replace_class(
             train_set,
             class_to_replace,
