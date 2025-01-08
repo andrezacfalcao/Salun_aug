@@ -744,8 +744,10 @@ def medmnist_dataloaders(
 
     #train_set.targets = np.array(train_set.targets)
     train_set.labels = np.array(train_set.labels).squeeze()
+    train_set.labels = train_set.labels.astype('int32')
     #test_set.targets = np.array(test_set.targets)
     test_set.labels = np.array(test_set.labels).squeeze()
+    test_set.labels = test_set.labels.astype('int32')
 
     # rng = np.random.RandomState(seed)
     # valid_set = copy.deepcopy(train_set)
@@ -761,6 +763,7 @@ def medmnist_dataloaders(
     # valid_set.data = train_set_copy.data[valid_idx]
     # valid_set.targets = train_set_copy.targets[valid_idx]
     valid_set.labels = np.array(valid_set.labels).squeeze()
+    valid_set.labels = valid_set.labels.astype('int32')
 
     # train_idx = list(set(range(len(train_set))) - set(valid_idx))
 
