@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import transforms
 from torchvision.datasets import CIFAR10, CIFAR100, SVHN, ImageFolder
 from tqdm import tqdm
+from medmnist import BloodMNIST
 
 
 def cifar10_dataloaders_no_val(
@@ -602,6 +603,141 @@ def cifar10_dataloaders(
     train_set = CIFAR10(data_dir, train=True, transform=train_transform, download=True)
 
     test_set = CIFAR10(data_dir, train=False, transform=test_transform, download=True)
+
+    train_set.targets = np.array(train_set.targets)
+    test_set.targets = np.array(test_set.targets)
+
+    rng = np.random.RandomState(seed)
+    valid_set = copy.deepcopy(train_set)
+    valid_idx = []
+    for i in range(max(train_set.targets) + 1):
+        class_idx = np.where(train_set.targets == i)[0]
+        valid_idx.append(
+            rng.choice(class_idx, int(0.1 * len(class_idx)), replace=False)
+        )
+    valid_idx = np.hstack(valid_idx)
+    train_set_copy = copy.deepcopy(train_set)
+
+    valid_set.data = train_set_copy.data[valid_idx]
+    valid_set.targets = train_set_copy.targets[valid_idx]
+
+    train_idx = list(set(range(len(train_set))) - set(valid_idx))
+
+    train_set.data = train_set_copy.data[train_idx]
+    train_set.targets = train_set_copy.targets[train_idx]
+
+    if class_to_replace is not None and indexes_to_replace is not None:
+        raise ValueError(
+            "Only one of `class_to_replace` and `indexes_to_replace` can be specified"
+        )
+    if class_to_replace is not None:
+        replace_class(
+            train_set,
+            class_to_replace,
+            num_indexes_to_replace=num_indexes_to_replace,
+            seed=seed - 1,
+            only_mark=only_mark,
+        )
+        if num_indexes_to_replace is None or num_indexes_to_replace == 4500:
+            test_set.data = test_set.data[test_set.targets != class_to_replace]
+            test_set.targets = test_set.targets[test_set.targets != class_to_replace]
+    if indexes_to_replace is not None:
+        replace_indexes(
+            dataset=train_set,
+            indexes=indexes_to_replace,
+            seed=seed - 1,
+            only_mark=only_mark,
+        )
+
+    loader_args = {"num_workers": 0, "pin_memory": False}
+
+    def _init_fn(worker_id):
+        np.random.seed(int(seed))
+
+    train_loader = DataLoader(
+        train_set,
+        batch_size=batch_size,
+        shuffle=True,
+        worker_init_fn=_init_fn if seed is not None else None,
+        **loader_args,
+    )
+    val_loader = DataLoader(
+        valid_set,
+        batch_size=batch_size,
+        shuffle=False,
+        worker_init_fn=_init_fn if seed is not None else None,
+        **loader_args,
+    )
+    test_loader = DataLoader(
+        test_set,
+        batch_size=batch_size,
+        shuffle=False,
+        worker_init_fn=_init_fn if seed is not None else None,
+        **loader_args,
+    )
+
+    return train_loader, val_loader, test_loader
+
+
+def medmnist_dataloaders(
+    batch_size=128,
+    data_dir="datasets/medmnist",
+    num_workers=2,
+    random_to_replace: int = None,
+    class_to_replace: int = None,
+    num_indexes_to_replace=None,
+    indexes_to_replace=None,
+    seed: int = 1,
+    only_mark: bool = False,
+    shuffle=True,
+    no_aug=False,
+    aug_mode=None,
+    im_size=64
+):
+    if no_aug:
+        train_transform = transforms.Compose(
+            [
+                transforms.ToTensor(),
+            ]
+        )
+    else:
+        if aug_mode == "crop-flip" or aug_mode==None:
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(im_size, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                ]
+            )
+        elif aug_mode == "crop-flip-randaug":
+            rand_augment = transforms.RandAugment(num_ops=2, magnitude=9)
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(im_size, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    rand_augment,
+                    transforms.ToTensor(),
+                ]
+            )
+            print("-------------------- tudo ok!!!!!!")
+        else:
+            print("Invalid Augmentation")
+            print(aug_mode)
+
+    test_transform = transforms.Compose(
+        [
+            transforms.ToTensor(),
+        ]
+    )
+
+
+    # train_set = CIFAR10(data_dir, train=True, transform=train_transform, download=True)
+    train_set = BloodMNIST( split='train', download=True, size=im_size, transform=train_transform)
+
+    # test_set = CIFAR10(data_dir, train=False, transform=test_transform, download=True)
+    test_set = BloodMNIST( split='test', transform=test_transform, download=True,  size=im_size)
+
+    import pdb; pdb.set_trace()
 
     train_set.targets = np.array(train_set.targets)
     test_set.targets = np.array(test_set.targets)

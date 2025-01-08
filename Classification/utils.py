@@ -133,7 +133,40 @@ def setup_model_dataset(args):
             aug_mode=args.aug_mode
         )
 
+        if args.train_seed is None:
+            args.train_seed = args.seed
+        setup_seed(args.train_seed)
 
+        if args.imagenet_arch:
+            model = model_dict[args.arch](num_classes=classes, imagenet=True)
+        else:
+            model = model_dict[args.arch](num_classes=classes)
+
+        setup_seed(args.train_seed)
+
+        model.normalize = normalization
+        return model, train_full_loader, val_loader, test_loader, marked_loader
+    elif args.dataset == "bloodmnist":
+        classes = 8
+        normalization = NormalizeByChannelMeanStd(
+            mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]
+        )
+        train_full_loader, val_loader, _ = cifar10_dataloaders(
+            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug, aug_mode=args.aug_mode
+        )
+        marked_loader, _, test_loader = cifar10_dataloaders(
+            batch_size=args.batch_size,
+            data_dir=args.data,
+            num_workers=args.workers,
+            class_to_replace=args.class_to_replace,
+            num_indexes_to_replace=args.num_indexes_to_replace,
+            indexes_to_replace=args.indexes_to_replace,
+            seed=args.seed,
+            only_mark=True,
+            shuffle=True,
+            no_aug=args.no_aug,
+            aug_mode=args.aug_mode
+        )
 
         if args.train_seed is None:
             args.train_seed = args.seed
@@ -148,6 +181,8 @@ def setup_model_dataset(args):
 
         model.normalize = normalization
         return model, train_full_loader, val_loader, test_loader, marked_loader
+
+
     elif args.dataset == "svhn":
         classes = 10
         normalization = NormalizeByChannelMeanStd(
