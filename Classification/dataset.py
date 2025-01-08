@@ -733,34 +733,39 @@ def medmnist_dataloaders(
 
 
     # train_set = CIFAR10(data_dir, train=True, transform=train_transform, download=True)
-    train_set = BloodMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
+    train_set = BloodMNIST( split='train',  root=data_dir,download=False, size=im_size, transform=train_transform)
+
+    valid_set = BloodMNIST( split='val',  root=data_dir,download=False, size=im_size, transform=train_transform)
 
     # test_set = CIFAR10(data_dir, train=False, transform=test_transform, download=True)
-    test_set = BloodMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
+    test_set = BloodMNIST( split='test',  root=data_dir, transform=test_transform, download=False,  size=im_size)
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
 
-    train_set.targets = np.array(train_set.targets)
-    test_set.targets = np.array(test_set.targets)
+    #train_set.targets = np.array(train_set.targets)
+    train_set.labels = np.array(train_set.labels)
+    #test_set.targets = np.array(test_set.targets)
+    test_set.labels = np.array(test_set.labels)
 
-    rng = np.random.RandomState(seed)
-    valid_set = copy.deepcopy(train_set)
-    valid_idx = []
-    for i in range(max(train_set.targets) + 1):
-        class_idx = np.where(train_set.targets == i)[0]
-        valid_idx.append(
-            rng.choice(class_idx, int(0.1 * len(class_idx)), replace=False)
-        )
-    valid_idx = np.hstack(valid_idx)
-    train_set_copy = copy.deepcopy(train_set)
+    # rng = np.random.RandomState(seed)
+    # valid_set = copy.deepcopy(train_set)
+    # valid_idx = []
+    # for i in range(max(train_set.targets) + 1):
+    #     class_idx = np.where(train_set.targets == i)[0]
+    #     valid_idx.append(
+    #         rng.choice(class_idx, int(0.1 * len(class_idx)), replace=False)
+    #     )
+    # valid_idx = np.hstack(valid_idx)
+    # train_set_copy = copy.deepcopy(train_set)
 
-    valid_set.data = train_set_copy.data[valid_idx]
-    valid_set.targets = train_set_copy.targets[valid_idx]
+    # valid_set.data = train_set_copy.data[valid_idx]
+    # valid_set.targets = train_set_copy.targets[valid_idx]
+    valid_set.labels = np.array(valid_set.labels)
 
-    train_idx = list(set(range(len(train_set))) - set(valid_idx))
+    # train_idx = list(set(range(len(train_set))) - set(valid_idx))
 
-    train_set.data = train_set_copy.data[train_idx]
-    train_set.targets = train_set_copy.targets[train_idx]
+    # train_set.data = train_set_copy.data[train_idx]
+    # train_set.targets = train_set_copy.targets[train_idx]
 
     if class_to_replace is not None and indexes_to_replace is not None:
         raise ValueError(
@@ -774,9 +779,11 @@ def medmnist_dataloaders(
             seed=seed - 1,
             only_mark=only_mark,
         )
-        if num_indexes_to_replace is None or num_indexes_to_replace == 4500:
-            test_set.data = test_set.data[test_set.targets != class_to_replace]
-            test_set.targets = test_set.targets[test_set.targets != class_to_replace]
+        #if num_indexes_to_replace is None or num_indexes_to_replace == 4500:
+        if num_indexes_to_replace is None :
+            #test_set.data = test_set.data[test_set.targets != class_to_replace]
+            test_set.imgs = test_set.imgs[test_set.labels != class_to_replace]
+            test_set.labels = test_set.labels[test_set.labels != class_to_replace]
     if indexes_to_replace is not None:
         replace_indexes(
             dataset=train_set,
