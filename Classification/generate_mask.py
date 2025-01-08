@@ -158,8 +158,8 @@ def main():
         marked = retain_dataset.labels >= 0
         retain_dataset.imgs = retain_dataset.imgs[marked]
         retain_dataset.labels = retain_dataset.labels[marked]
-        import pdb; pdb.set_trace()
-        retain_loader.info["n_samples"]["train"] = retain_loader.imgs.shape[0]
+        # import pdb; pdb.set_trace()
+        retain_dataset.info["n_samples"]["train"] = retain_dataset.imgs.shape[0]
         retain_loader = replace_loader_dataset(
             retain_dataset, seed=seed, shuffle=True
         )
