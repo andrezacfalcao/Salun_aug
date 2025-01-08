@@ -880,6 +880,7 @@ def replace_class(
         rng = np.random.RandomState(seed)
         indexes = rng.choice(indexes, size=num_indexes_to_replace, replace=False)
         print(f"Replacing indexes {indexes}")
+    import pdb;pdb.set_trace()
     replace_indexes(dataset, indexes, seed, only_mark)
 
 
