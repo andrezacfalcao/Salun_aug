@@ -148,7 +148,8 @@ def main():
         marked = forget_dataset.labels < 0
         forget_dataset.imgs = forget_dataset.imgs[marked]
         forget_dataset.labels = -forget_dataset.labels[marked] - 1
-        import pdb; pdb.set_trace()
+        
+        forget_dataset.info["n_samples"]["train"] = forget_dataset.imgs.shape[0]
         forget_loader = replace_loader_dataset(
             forget_dataset, seed=seed, shuffle=True
         )
