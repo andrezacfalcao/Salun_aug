@@ -826,6 +826,7 @@ def medmnist_dataloaders(
 def replace_indexes(
     dataset: torch.utils.data.Dataset, indexes, seed=0, only_mark: bool = False
 ):
+    import pdb;pdb.set_trace()
     if not only_mark:
         rng = np.random.RandomState(seed)
         new_indexes = rng.choice(
@@ -880,7 +881,7 @@ def replace_class(
         rng = np.random.RandomState(seed)
         indexes = rng.choice(indexes, size=num_indexes_to_replace, replace=False)
         print(f"Replacing indexes {indexes}")
-    import pdb;pdb.set_trace()
+    
     replace_indexes(dataset, indexes, seed, only_mark)
 
 
