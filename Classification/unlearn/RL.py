@@ -16,10 +16,15 @@ def RL(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
     
     #if args.dataset == "cifar100" or args.dataset == "TinyImagenet":
     if args.dataset == "cifar100" or args.dataset == "TinyImagenet" or args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
-        try:
-            forget_dataset.targets = np.random.randint(0, args.num_classes, forget_dataset.targets.shape)
-        except:
-            forget_dataset.dataset.targets = np.random.randint(0, args.num_classes, len(forget_dataset.dataset.targets))
+        
+        if args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
+            forget_dataset.targets = np.random.randint(0, args.num_classes, forget_dataset.labels.shape)
+        else:
+        
+            try:
+                forget_dataset.targets = np.random.randint(0, args.num_classes, forget_dataset.targets.shape)
+            except:
+                forget_dataset.dataset.targets = np.random.randint(0, args.num_classes, len(forget_dataset.dataset.targets))
     
         retain_dataset = retain_loader.dataset
         train_dataset = torch.utils.data.ConcatDataset([forget_dataset,retain_dataset])
