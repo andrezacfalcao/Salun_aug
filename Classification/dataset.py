@@ -681,7 +681,8 @@ def cifar10_dataloaders(
 
 def medmnist_dataloaders(
     batch_size=128,
-    data_dir="datasets/medmnist",
+    #data_dir="datasets/medmnist",
+    data_dir="/home/pesquisador/pesquisa/datasets",
     num_workers=2,
     random_to_replace: int = None,
     class_to_replace: int = None,
@@ -732,10 +733,10 @@ def medmnist_dataloaders(
 
 
     # train_set = CIFAR10(data_dir, train=True, transform=train_transform, download=True)
-    train_set = BloodMNIST( split='train', download=True, size=im_size, transform=train_transform)
+    train_set = BloodMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
 
     # test_set = CIFAR10(data_dir, train=False, transform=test_transform, download=True)
-    test_set = BloodMNIST( split='test', transform=test_transform, download=True,  size=im_size)
+    test_set = BloodMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
 
     import pdb; pdb.set_trace()
 
