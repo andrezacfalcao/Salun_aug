@@ -14,7 +14,8 @@ def RL(data_loaders, model, criterion, optimizer, epoch, args, mask=None):
     retain_loader = data_loaders["retain"]
     forget_dataset = deepcopy(forget_loader.dataset)
     
-    if args.dataset == "cifar100" or args.dataset == "TinyImagenet":
+    #if args.dataset == "cifar100" or args.dataset == "TinyImagenet":
+    if args.dataset == "cifar100" or args.dataset == "TinyImagenet" or args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
         try:
             forget_dataset.targets = np.random.randint(0, args.num_classes, forget_dataset.targets.shape)
         except:
