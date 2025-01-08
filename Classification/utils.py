@@ -151,10 +151,10 @@ def setup_model_dataset(args):
         normalization = NormalizeByChannelMeanStd(
             mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]
         )
-        train_full_loader, val_loader, _ = cifar10_dataloaders(
+        train_full_loader, val_loader, _ = medmnist_dataloaders(
             batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug, aug_mode=args.aug_mode
         )
-        marked_loader, _, test_loader = cifar10_dataloaders(
+        marked_loader, _, test_loader = medmnist_dataloaders(
             batch_size=args.batch_size,
             data_dir=args.data,
             num_workers=args.workers,
