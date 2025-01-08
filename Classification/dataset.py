@@ -782,6 +782,7 @@ def medmnist_dataloaders(
         #if num_indexes_to_replace is None or num_indexes_to_replace == 4500:
         if num_indexes_to_replace is None :
             #test_set.data = test_set.data[test_set.targets != class_to_replace]
+            import pdb; pdb.set_trace()
             test_set.imgs = test_set.imgs[test_set.labels != class_to_replace]
             test_set.labels = test_set.labels[test_set.labels != class_to_replace]
     if indexes_to_replace is not None:
