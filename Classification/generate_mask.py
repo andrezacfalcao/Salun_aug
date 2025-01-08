@@ -148,6 +148,7 @@ def main():
         marked = forget_dataset.labels < 0
         forget_dataset.imgs = forget_dataset.imgs[marked]
         forget_dataset.labels = -forget_dataset.labels[marked] - 1
+        import pdb; pdb.set_trace()
         forget_loader = replace_loader_dataset(
             forget_dataset, seed=seed, shuffle=True
         )
@@ -158,7 +159,7 @@ def main():
         retain_loader = replace_loader_dataset(
             retain_dataset, seed=seed, shuffle=True
         )
-        import pdb; pdb.set_trace();
+        # import pdb; pdb.set_trace();
         assert len(forget_dataset) + len(retain_dataset) == len(
             train_loader_full.dataset
         )
