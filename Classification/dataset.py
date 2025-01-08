@@ -771,8 +771,9 @@ def medmnist_dataloaders(
         raise ValueError(
             "Only one of `class_to_replace` and `indexes_to_replace` can be specified"
         )
-    import pdb; pdb.set_trace()
+    
     if class_to_replace is not None:
+        import pdb; pdb.set_trace()
         replace_class(
             train_set,
             class_to_replace,
