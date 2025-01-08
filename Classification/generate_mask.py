@@ -158,6 +158,7 @@ def main():
         retain_loader = replace_loader_dataset(
             retain_dataset, seed=seed, shuffle=True
         )
+        import pdb; pdb.set_trace();
         assert len(forget_dataset) + len(retain_dataset) == len(
             train_loader_full.dataset
         )
