@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import transforms
 from torchvision.datasets import CIFAR10, CIFAR100, SVHN, ImageFolder
 from tqdm import tqdm
-from medmnist import BloodMNIST
+from medmnist import BloodMNIST, PathMNIST, OrganAMNIST, OCTMNIST
 
 
 def cifar10_dataloaders_no_val(
@@ -693,7 +693,8 @@ def medmnist_dataloaders(
     shuffle=True,
     no_aug=False,
     aug_mode=None,
-    im_size=64
+    im_size=64,
+    dataset=None
 ):
     if no_aug:
         train_transform = transforms.Compose(
@@ -732,13 +733,38 @@ def medmnist_dataloaders(
     )
 
 
+    if dataset == "bloodmnist":
+        train_set = BloodMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
+
+        valid_set = BloodMNIST( split='val',  root=data_dir,download=True, size=im_size, transform=train_transform)
+
+        test_set = BloodMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
+    
+    elif dataset == "pathmnist":
+        train_set = PathMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
+        valid_set = PathMNIST( split='val',  root=data_dir,download=True, size=im_size, transform=train_transform)
+
+        test_set = PathMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
+ 
+    
+    elif dataset == "organamnist":
+        train_set = OrganAMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
+        valid_set = OrganAMNIST( split='val',  root=data_dir,download=True, size=im_size, transform=train_transform)
+
+        test_set = OrganAMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
+    
+    elif dataset == "octmnist":
+        train_set = OCTMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
+        valid_set = OCTMNIST( split='val',  root=data_dir,download=True, size=im_size, transform=train_transform)
+
+        test_set = OCTMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
+
+    else:
+        
+        raise ValueError("Dataset not supprot yet !")
+
     # train_set = CIFAR10(data_dir, train=True, transform=train_transform, download=True)
-    train_set = BloodMNIST( split='train',  root=data_dir,download=False, size=im_size, transform=train_transform)
-
-    valid_set = BloodMNIST( split='val',  root=data_dir,download=False, size=im_size, transform=train_transform)
-
-    # test_set = CIFAR10(data_dir, train=False, transform=test_transform, download=True)
-    test_set = BloodMNIST( split='test',  root=data_dir, transform=test_transform, download=False,  size=im_size)
+    
 
     # import pdb; pdb.set_trace()
 

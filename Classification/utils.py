@@ -146,13 +146,14 @@ def setup_model_dataset(args):
 
         model.normalize = normalization
         return model, train_full_loader, val_loader, test_loader, marked_loader
-    elif args.dataset == "bloodmnist":
+    #elif args.dataset == "bloodmnist":
+    elif args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
         classes = 8
         normalization = NormalizeByChannelMeanStd(
             mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]
         )
         train_full_loader, val_loader, _ = medmnist_dataloaders(
-            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug, aug_mode=args.aug_mode
+            batch_size=args.batch_size, data_dir=args.data, num_workers=args.workers, no_aug=args.no_aug, aug_mode=args.aug_mode, dataset=args.dataset
         )
         marked_loader, _, test_loader = medmnist_dataloaders(
             batch_size=args.batch_size,
@@ -166,6 +167,7 @@ def setup_model_dataset(args):
             shuffle=True,
             no_aug=args.no_aug,
             aug_mode=args.aug_mode
+            dataset=args.dataset
         )
 
         if args.train_seed is None:
