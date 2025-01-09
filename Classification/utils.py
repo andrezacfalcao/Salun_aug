@@ -148,7 +148,15 @@ def setup_model_dataset(args):
         return model, train_full_loader, val_loader, test_loader, marked_loader
     #elif args.dataset == "bloodmnist":
     elif args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
-        classes = 8
+        if args.dataset == "bloodmnist":
+            classes = 8
+        elif args.dataset == "pathmnist":
+            classes = 9
+        elif args.dataset == "organamnist":
+            classes = 11
+        elif args.dataset == "octmnist":
+            classes = 4
+            
         normalization = NormalizeByChannelMeanStd(
             mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]
         )
