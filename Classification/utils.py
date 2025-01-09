@@ -166,7 +166,7 @@ def setup_model_dataset(args):
             only_mark=True,
             shuffle=True,
             no_aug=args.no_aug,
-            aug_mode=args.aug_mode
+            aug_mode=args.aug_mode,
             dataset=args.dataset
         )
 
