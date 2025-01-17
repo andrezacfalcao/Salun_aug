@@ -15,6 +15,8 @@ from PIL import Image
 from torch.utils.data import DataLoader, Dataset, Subset
 from torchvision import transforms
 from torchvision.datasets import CIFAR10, CIFAR100, SVHN, ImageFolder
+from torchvision.transforms import AutoAugment, AutoAugmentPolicy
+from torchvision.transforms import TrivialAugmentWide
 from tqdm import tqdm
 from medmnist import BloodMNIST, PathMNIST, OrganAMNIST, OCTMNIST
 
@@ -583,7 +585,52 @@ def cifar10_dataloaders(
                     transforms.ToTensor(),
                 ]
             )
-            print("-------------------- tudo ok!!!!!!")
+            
+        elif aug_mode == "crop-flip-autoaug":
+            auto_augment = AutoAugment(policy=AutoAugmentPolicy.CIFAR10)
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    auto_augment, 
+                    transforms.ToTensor(),
+                ]
+            )
+        elif aug_mode == "crop-flip-rerase":
+            random_erasing = transforms.RandomErasing(
+                p=0.5,             # Probability of applying Random Erasing
+                scale=(0.02, 0.33), # Range of proportion of erased area relative to image
+                ratio=(0.3, 3.3),  # Aspect ratio of erased area
+                value=0,           # Value to fill the erased area (e.g., 0 for black)
+                inplace=False      # Whether to modify the image in-place
+            )
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.ToTensor(),
+                    random_erasing
+                ])
+        elif aug_mode == "crop-flip-trivial":
+            trivial_augment = TrivialAugmentWide()
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    trivial_augment,  
+                    transforms.ToTensor(),
+                    
+                ])
+        elif aug_mode == "crop-flip-augmix":
+            
+            train_transform = transforms.Compose(
+                [
+                    transforms.RandomCrop(32, padding=4),
+                    transforms.RandomHorizontalFlip(),
+                    transforms.AugMix(),  
+                    transforms.ToTensor(),
+                    
+                ])
         else:
             print("Invalid Augmentation")
             print(aug_mode)
