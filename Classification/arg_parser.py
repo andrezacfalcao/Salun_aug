@@ -143,6 +143,6 @@ def parse_args():
     parser.add_argument("--mask_path", default=None, type=str, help="the path of saliency map")
 
     ### Aug setting
-    parser.add_argument('--aug_mode', type=str, default='crop-flip', choices=['crop-flip','crop-flip-randaug'], help='mode for augmentation')
+    parser.add_argument('--aug_mode', type=str, default='crop-flip', choices=['crop-flip','crop-flip-randaug', "crop-flip-autoaug", "crop-flip-rerase", "crop-flip-trivial", "crop-flip-augmix"], help='mode for augmentation')
 
     return parser.parse_args()
