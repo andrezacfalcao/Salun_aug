@@ -73,6 +73,30 @@ def main():
         assert len(forget_dataset) + len(retain_dataset) == len(
             train_loader_full.dataset
         )
+    elif args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
+        
+        marked = forget_dataset.labels < 0
+        forget_dataset.imgs = forget_dataset.imgs[marked]
+        forget_dataset.labels = -forget_dataset.labels[marked] - 1
+        
+        forget_dataset.info["n_samples"]["train"] = forget_dataset.imgs.shape[0]
+        
+        forget_loader = replace_loader_dataset(
+            forget_dataset, seed=seed, shuffle=True
+        )
+        retain_dataset = copy.deepcopy(marked_loader.dataset)
+        marked = retain_dataset.labels >= 0
+        retain_dataset.imgs = retain_dataset.imgs[marked]
+        retain_dataset.labels = retain_dataset.labels[marked]
+        
+        retain_dataset.info["n_samples"]["train"] = retain_dataset.imgs.shape[0]
+        retain_loader = replace_loader_dataset(
+            retain_dataset, seed=seed, shuffle=True
+        )
+        
+        assert len(forget_dataset) + len(retain_dataset) == len(
+            train_loader_full.dataset
+        )
     else:
         try:
             marked = forget_dataset.targets < 0
