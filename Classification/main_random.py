@@ -209,7 +209,7 @@ def main():
         utils.dataset_convert_to_test(test_loader, args)
 
         #shadow_train = torch.utils.data.Subset(retain_dataset, list(range(test_len)))
-        shadow_train = torch.utils.data.Subset(retain_dataset, list(range(retain_dataset))) #Filipe's update
+        shadow_train = torch.utils.data.Subset(retain_dataset, list(range(retain_len))) #Filipe's update
         shadow_train_loader = torch.utils.data.DataLoader(
             shadow_train, batch_size=args.batch_size, shuffle=False
         )
