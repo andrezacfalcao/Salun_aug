@@ -795,7 +795,7 @@ def medmnist_dataloaders(
             [
                 transforms.ToTensor(),
             ]
-        )
+        ) 
     else:
         if aug_mode == "crop-flip" or aug_mode==None:
             train_transform = transforms.Compose(
@@ -949,7 +949,7 @@ def medmnist_dataloaders(
 
 
 def replace_indexes(
-    dataset: torch.utils.data.Dataset, indexes, seed=0, only_mark: bool = False
+    dataset: torch.utils.data.Dataset, indexes, seed=2, only_mark: bool = False
 ):
     
     if not only_mark:
