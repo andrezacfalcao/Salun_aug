@@ -166,6 +166,9 @@ def main():
                 all_result["val_ta"][val_pick_best_epoch], val_pick_best_epoch + 1
             )
         )
+    with open(os.path.join(args.save_dir, "results.txt"), "w") as f:
+        f.write(f"Best val_ta: {all_result['val_ta'][val_pick_best_epoch]:.4f}\n")
+        f.write(f"Best epoch: {val_pick_best_epoch + 1}\n")
     
 
 if __name__ == "__main__":
