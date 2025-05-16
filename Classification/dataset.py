@@ -949,7 +949,7 @@ def medmnist_dataloaders(
 
 
 def replace_indexes(
-    dataset: torch.utils.data.Dataset, indexes, seed=2, only_mark: bool = False
+    dataset: torch.utils.data.Dataset, indexes, seed=0, only_mark: bool = False
 ):
     
     if not only_mark:
@@ -974,7 +974,7 @@ def replace_indexes(
             except:
                 dataset._labels[indexes] = -dataset._labels[indexes] - 1
 
-
+ 
 def replace_class(
     dataset: torch.utils.data.Dataset,
     class_to_replace: int,
