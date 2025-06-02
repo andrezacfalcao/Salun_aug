@@ -1,5 +1,6 @@
 import copy
 import os
+import time
 from collections import OrderedDict
 
 import arg_parser
@@ -14,6 +15,9 @@ from trainer import validate
 
 def main():
     args = arg_parser.parse_args()
+    
+    # Start timing the execution
+    start_time = time.time()
 
     if torch.cuda.is_available():
         torch.cuda.set_device(int(args.gpu))
@@ -172,6 +176,12 @@ def main():
 
         evaluation_result["accuracy"] = accuracy
         unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
+
+    # Calculate total execution time
+    end_time = time.time()
+    rte = end_time - start_time
+    evaluation_result["RTE"] = rte
+    print(f"RTE (Runtime Execution): {rte:.2f} seconds")
 
     UA = 100 - evaluation_result["accuracy"]["forget"]
     print(f"UA (Unlearning Accuracy): {UA:.2f}%")
