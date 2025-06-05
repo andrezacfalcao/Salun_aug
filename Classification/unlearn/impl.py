@@ -113,7 +113,11 @@ def _iterative_unlearn_impl(unlearn_iter_func):
             )
             scheduler.step()
 
-            print("one epoch duration:{}".format(time.time() - start_time))
+            epoch_duration = time.time() - start_time
+            # Registrar o tempo da época
+            if hasattr(args, 'epoch_times'):
+                args.epoch_times.append(epoch_duration)
+            print("one epoch duration:{}".format(epoch_duration))
 
     return _wrapped
 

@@ -1,5 +1,6 @@
 import copy
 import os
+import time
 from collections import OrderedDict
 
 import arg_parser
@@ -14,6 +15,12 @@ from trainer import validate
 
 def main():
     args = arg_parser.parse_args()
+    
+    # Start timing the execution
+    start_time = time.time()
+    
+    # Adicionar um parâmetro na args para guardar os tempos de cada época
+    args.epoch_times = []
 
     if torch.cuda.is_available():
         torch.cuda.set_device(int(args.gpu))
@@ -225,6 +232,20 @@ def main():
 
     MIA = evaluation_result["SVC_MIA_forget_efficacy"]['confidence'] * 100
     print(f"MIA (Membership Inference Attack): {MIA:.2f}")
+    
+    # Calculate total execution time
+    end_time = time.time()
+    rte = end_time - start_time
+    evaluation_result["RTE"] = rte
+    
+    # Mostrar os tempos de cada época se existirem
+    if hasattr(args, 'epoch_times') and args.epoch_times:
+        for i, epoch_time in enumerate(args.epoch_times):
+            print(f"Epoch {i+1} RTE: {epoch_time:.2f} seconds")
+        print(f"Sum of epoch RTE: {sum(args.epoch_times):.2f} seconds")
+    
+    print(f"Total RTE (Runtime Execution): {rte:.2f} seconds")
+    
     unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
 

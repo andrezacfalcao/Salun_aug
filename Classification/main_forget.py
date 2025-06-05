@@ -18,6 +18,9 @@ def main():
     
     # Start timing the execution
     start_time = time.time()
+    
+    # Adicionar um parâmetro na args para guardar os tempos de cada época
+    args.epoch_times = []
 
     if torch.cuda.is_available():
         torch.cuda.set_device(int(args.gpu))
@@ -181,7 +184,14 @@ def main():
     end_time = time.time()
     rte = end_time - start_time
     evaluation_result["RTE"] = rte
-    print(f"RTE (Runtime Execution): {rte:.2f} seconds")
+    
+    # Mostrar os tempos de cada época se existirem
+    if hasattr(args, 'epoch_times') and args.epoch_times:
+        for i, epoch_time in enumerate(args.epoch_times):
+            print(f"Epoch {i+1} RTE: {epoch_time:.2f} seconds")
+        print(f"Sum of epoch RTE: {sum(args.epoch_times):.2f} seconds")
+    
+    print(f"Total RTE (Runtime Execution): {rte:.2f} seconds")
 
     UA = 100 - evaluation_result["accuracy"]["forget"]
     print(f"UA (Unlearning Accuracy): {UA:.2f}%")

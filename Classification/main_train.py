@@ -30,6 +30,12 @@ best_sa = 0
 def main():
     global args, best_sa
     args = arg_parser.parse_args()
+    
+    # Start timing the execution
+    start_time = time.time()
+    
+    # Adicionar um parâmetro na args para guardar os tempos de cada época
+    args.epoch_times = []
 
     torch.cuda.set_device(int(args.gpu))
     os.makedirs(args.save_dir, exist_ok=True)
@@ -107,7 +113,7 @@ def main():
         state = 0
 
     for epoch in range(start_epoch, args.epochs):
-        start_time = time.time()
+        epoch_start_time = time.time()
         print(
             "Epoch #{}, Learning rate: {}".format(
                 epoch, optimizer.state_dict()["param_groups"][0]["lr"]
@@ -143,7 +149,9 @@ def main():
             pruning=state,
             save_path=args.save_dir,
         )
-        print("one epoch duration:{}".format(time.time() - start_time))
+        epoch_duration = time.time() - epoch_start_time
+        args.epoch_times.append(epoch_duration)
+        print("one epoch duration:{}".format(epoch_duration))
 
     # plot training curve
     plt.plot(all_result["train_ta"], label="train_acc")
@@ -170,6 +178,21 @@ def main():
         f.write(f"Best val_ta: {all_result['val_ta'][val_pick_best_epoch]:.4f}\n")
         f.write(f"Best epoch: {val_pick_best_epoch + 1}\n")
     
+    # Calculate total execution time
+    end_time = time.time()
+    rte = end_time - start_time
+    
+    # Mostrar os tempos de cada época
+    if hasattr(args, 'epoch_times') and args.epoch_times:
+        for i, epoch_time in enumerate(args.epoch_times):
+            print(f"Epoch {i+1} RTE: {epoch_time:.2f} seconds")
+        print(f"Sum of epoch RTE: {sum(args.epoch_times):.2f} seconds")
+    
+    print(f"Total RTE (Runtime Execution): {rte:.2f} seconds")
+    
+    # Salvar o RTE nos resultados
+    with open(os.path.join(args.save_dir, "results.txt"), "a") as f:
+        f.write(f"Total RTE: {rte:.2f} seconds\n")
 
 if __name__ == "__main__":
     main()
