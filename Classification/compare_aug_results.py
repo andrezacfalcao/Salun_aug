@@ -21,7 +21,7 @@ def extract_augmentation_type(command):
             return 'Random Erasing'
         elif 'crop-flip-augmix' in aug_mode:
             return 'AugMix'
-        elif 'crop-flip-triviaug' in aug_mode:
+        elif 'crop-flip-trivial' in aug_mode:
             return 'TrivialAugment'
         elif 'crop-flip-randaug' in aug_mode:
             return 'RandAugment'
@@ -40,7 +40,7 @@ def extract_augmentation_type(command):
             return 'Random Erasing'
         elif 'augmix' in save_dir:
             return 'AugMix'
-        elif 'triviaug' in save_dir:
+        elif 'trivial' in save_dir:
             return 'TrivialAugment'
         elif 'randaug' in save_dir:
             return 'RandAugment'
