@@ -1,0 +1,124 @@
+###############################################################################
+# GRUPO 1: Experimentos Retrain - 50% forgetting (num_indexes_to_replace = 22500) #
+###############################################################################
+
+# Default augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_df/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_df --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets
+
+# No augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_noaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_noaug --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --no aug
+
+# AutoAug augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_autoaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_autoaug --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-autoaug
+
+# RErasing augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_rerase/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rerase --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-rerase
+
+# AugMix augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_augmix/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_augmix --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-augmix
+
+# TrivialAug augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_triviaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_triviaug --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-trivial
+
+# RandAug augmentation (Retrain)
+python3 main_forget.py --unlearn retrain --unlearn_epochs 10 --unlearn_lr 0.1 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_randaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_randaug --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-randaug
+
+###############################################################################
+# GRUPO 2: SALUN - Parte 1 - Geração de Máscaras (50% forgetting - 22500 indexes) #
+###############################################################################
+
+# Default augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_df_to_df_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_df/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets
+
+# No augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_noaug_to_noaug_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_noaug/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --no aug
+
+# AutoAug augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_autoaug_to_autoaug_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_autoaug/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-autoaug
+
+# RErasing augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_rerase_to_rerase_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_rerase/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-rerase
+
+# AugMix augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_augmix_to_augmix_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_augmix/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-augmix
+
+# TrivialAug augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_triviaug_to_triviaug_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_triviaug/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-trivial
+
+# RandAug augmentation (Generate Mask)
+python3 generate_mask.py --dataset cifar10 --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_randaug_to_randaug_f50 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_randaug/0model_SA_best.pth.tar --unlearn_epochs 1 --num_indexes_to_replace 22500 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-randaug
+
+###############################################################################
+# GRUPO 3: SALUN - Parte 2 - Aplicar RL com Máscaras (50% forgetting - 22500 indexes) #
+###############################################################################
+
+# Default augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_df/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_df_to_df_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_df_to_df_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets
+
+# No augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_noaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_noaug_to_noaug_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_noaug_to_noaug_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --no aug
+
+# AutoAug augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_autoaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_autoaug_to_autoaug_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_autoaug_to_autoaug_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-autoaug
+
+# RErasing augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_rerase/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_rerase_to_rerase_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_rerase_to_rerase_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-rerase
+
+# AugMix augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_augmix/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_augmix_to_augmix_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_augmix_to_augmix_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-augmix
+
+# TrivialAug augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_triviaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_triviaug_to_triviaug_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_triviaug_to_triviaug_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-trivial
+
+# RandAug augmentation (Apply RL with Mask)
+python3 main_random.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_randaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_randaug_to_randaug_f50 --mask_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_randaug_to_randaug_f50/with_0.5.pt --num_indexes_to_replace 22500 --dataset cifar10 --data /mnt/hd_pesquisa/pesquisa/andreza/datasets --aug_mode crop-flip-randaug
+
+###############################################################################
+# GRUPO 4: RL - Random Loss (50% forgetting - num_indexes_to_replace = 22500) #
+###############################################################################
+
+# Default augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_df/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_df --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets
+
+# No augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_noaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_noaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --no aug
+
+# AutoAug augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_autoaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_autoaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-autoaug
+
+# RErasing augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_rerase/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_rerase --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-rerase
+
+# AugMix augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_augmix/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_augmix --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-augmix
+
+# TrivialAug augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_triviaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_triviaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-trivial
+
+# RandAug augmentation (RL)
+python3 main_forget.py --unlearn RL --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_randaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_rl_randaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-randaug
+
+###############################################################################
+# GRUPO 5: FT - Fine-Tuning (50% forgetting - num_indexes_to_replace = 22500) #
+###############################################################################
+
+# Default augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_df/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_df --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets
+
+# No augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_noaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_noaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --no aug
+
+# AutoAug augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_autoaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_autoaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-autoaug
+
+# RErasing augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_rerase/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_rerase --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-rerase
+
+# AugMix augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_augmix/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_augmix --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-augmix
+
+# TrivialAug augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_triviaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_triviaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-trivial
+
+# RandAug augmentation (FT)
+python3 main_forget.py --unlearn FT --unlearn_epochs 10 --unlearn_lr 0.013 --model_path /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_baseline_randaug/0model_SA_best.pth.tar --save_dir /mnt/hd_pesquisa/pesquisa/andreza/code_salun_andreza/Salun_aug/Classification/exp_cifar10_50_ft_randaug --num_indexes_to_replace 22500 --dataset cifar10 --data /home/pesquisavcl/pesquisa/andreza/datasets --aug_mode crop-flip-randaug 
