@@ -1,0 +1,14 @@
+# Lista de comandos para executar
+# Linhas que começam com # são ignoradas (comentários)
+
+# Treinamento padrão
+python main_train.py --dataset cifar10 --seed 1 --save-dir ./results/exp1 --gpu 0
+
+# Treinamento com mais épocas
+python main_train.py --dataset cifar10 --seed 2 --epochs 20 --save-dir ./results/exp2 --gpu 0
+
+# Exemplo de desaprendizado
+python main_forget.py --dataset cifar10 --seed 3 --model-path ./path/to/model.pth --save-dir ./results/exp3 --gpu 0 --unlearn FT
+
+# Outro comando de exemplo
+python main_random.py --dataset cifar10 --seed 4 --model-path ./path/to/model.pth --save-dir ./results/exp4 --gpu 0 
