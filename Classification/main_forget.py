@@ -238,6 +238,12 @@ def main():
     print(f"MIA (Membership Inference Attack): {MIA:.2f}")
     unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
+    with open(os.path.join(args.save_dir, "results.txt"), "w") as f:
+        f.write(f"UA (Unlearning Accuracy): {UA:.2f}%")
+        f.write(f"RA (Remaining Accuracy): {RA:.2f}%")
+        f.write(f"TA (Testing Accuracy): {TA:.2f}%")
+        f.write(f"MIA (Membership Inference Attack): {MIA:.2f}")
+
 
 if __name__ == "__main__":
     main()
