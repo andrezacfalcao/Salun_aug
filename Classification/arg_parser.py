@@ -142,6 +142,25 @@ def parse_args():
     parser.add_argument("--alpha", default=0.2, type=float, help="unlearn noise")
     parser.add_argument("--mask_path", default=None, type=str, help="the path of saliency map")
 
+    parser.add_argument(
+        "--unbalanced_removal",
+        action="store_true",
+        default=False,
+        help="Enable unbalanced removal for fairness analysis (DermaMNIST)"
+    )
+    parser.add_argument(
+        "--malignant_proportion",
+        type=float,
+        default=0.50,
+        help="Proportion of malignant samples to remove (default: 0.50 = 50%%)"
+    )
+    parser.add_argument(
+        "--benign_proportion",
+        type=float,
+        default=0.11,
+        help="Proportion of benign samples to remove (default: 0.11 = 11%%)"
+    )
+
     ### Aug setting
     parser.add_argument('--aug_mode', type=str, default='crop-flip', choices=['crop-flip','crop-flip-randaug', "crop-flip-autoaug", "crop-flip-rerase", "crop-flip-trivial", "crop-flip-augmix"], help='mode for augmentation')
 

@@ -18,7 +18,10 @@ from torchvision.datasets import CIFAR10, CIFAR100, SVHN, ImageFolder
 from torchvision.transforms import AutoAugment, AutoAugmentPolicy
 from torchvision.transforms import TrivialAugmentWide
 from tqdm import tqdm
-from medmnist import BloodMNIST, PathMNIST, OrganAMNIST, OCTMNIST
+from medmnist import BloodMNIST, PathMNIST, OrganAMNIST, OCTMNIST, DermaMNIST
+
+DERMAMNIST_MALIGNANT_CLASSES = [0, 1, 4]
+DERMAMNIST_BENIGN_CLASSES = [2, 3, 5, 6]
 
 
 def cifar10_dataloaders_no_val(
@@ -788,7 +791,10 @@ def medmnist_dataloaders(
     no_aug=False,
     aug_mode=None,
     im_size=64,
-    dataset=None
+    dataset=None,
+    unbalanced_removal: bool = False,
+    malignant_proportion: float = 0.50,
+    benign_proportion: float = 0.11,
 ):
     if no_aug:
         train_transform = transforms.Compose(
@@ -897,6 +903,12 @@ def medmnist_dataloaders(
 
         test_set = OCTMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
 
+    elif dataset == "dermamnist":
+        train_set = DermaMNIST( split='train',  root=data_dir,download=True, size=im_size, transform=train_transform)
+        valid_set = DermaMNIST( split='val',  root=data_dir,download=True, size=im_size, transform=train_transform)
+
+        test_set = DermaMNIST( split='test',  root=data_dir, transform=test_transform, download=True,  size=im_size)
+
     else:
         
         raise ValueError("Dataset not supprot yet !")
@@ -958,6 +970,18 @@ def medmnist_dataloaders(
         replace_indexes(
             dataset=train_set,
             indexes=indexes_to_replace,
+            seed=seed - 1,
+            only_mark=only_mark,
+        )
+    
+    # Remoção desbalanceada para análise de fairness (DermaMNIST)
+    if unbalanced_removal and dataset == "dermamnist":
+        replace_classes_unbalanced(
+            train_set,
+            malignant_classes=DERMAMNIST_MALIGNANT_CLASSES,
+            benign_classes=DERMAMNIST_BENIGN_CLASSES,
+            malignant_proportion=malignant_proportion,
+            benign_proportion=benign_proportion,
             seed=seed - 1,
             only_mark=only_mark,
         )
@@ -1054,6 +1078,84 @@ def replace_class(
     replace_indexes(dataset, indexes, seed, only_mark)
 
 
+def replace_classes_unbalanced(
+    dataset: torch.utils.data.Dataset,
+    malignant_classes: list = DERMAMNIST_MALIGNANT_CLASSES,
+    benign_classes: list = DERMAMNIST_BENIGN_CLASSES,
+    malignant_proportion: float = 0.50,
+    benign_proportion: float = 0.11,
+    seed: int = 0,
+    only_mark: bool = True,
+):
+    """
+    Remoção desbalanceada para análise de fairness.
+    Remove proporções diferentes de amostras de classes malignas vs benignas.
+    
+    Args:
+        dataset: Dataset a ser modificado
+        malignant_classes: Lista de índices das classes malignas [0, 1, 4]
+        benign_classes: Lista de índices das classes benignas [2, 3, 5, 6]
+        malignant_proportion: Proporção de amostras malignas a remover (default: 50%)
+        benign_proportion: Proporção de amostras benignas a remover (default: 11%)
+        seed: Semente para reprodutibilidade
+        only_mark: Se True, marca com labels negativos; se False, substitui dados
+    
+    Returns:
+        dict com estatísticas da remoção
+    """
+    rng = np.random.RandomState(seed)
+    
+    # Obter labels do dataset
+    try:
+        labels = np.array(dataset.targets)
+    except:
+        try:
+            labels = np.array(dataset.labels)
+        except:
+            labels = np.array(dataset._labels)
+    
+    all_indexes_to_replace = []
+    stats = {
+        'malignant': {'total': 0, 'removed': 0, 'classes': {}},
+        'benign': {'total': 0, 'removed': 0, 'classes': {}}
+    }
+    
+    for class_idx in malignant_classes:
+        class_indexes = np.flatnonzero(labels == class_idx)
+        n_total = len(class_indexes)
+        n_to_remove = int(n_total * malignant_proportion)
+        
+        if n_to_remove > 0:
+            selected = rng.choice(class_indexes, size=n_to_remove, replace=False)
+            all_indexes_to_replace.extend(selected)
+        
+        stats['malignant']['total'] += n_total
+        stats['malignant']['removed'] += n_to_remove
+        stats['malignant']['classes'][class_idx] = {'total': n_total, 'removed': n_to_remove}
+    
+    for class_idx in benign_classes:
+        class_indexes = np.flatnonzero(labels == class_idx)
+        n_total = len(class_indexes)
+        n_to_remove = int(n_total * benign_proportion)
+        
+        if n_to_remove > 0:
+            selected = rng.choice(class_indexes, size=n_to_remove, replace=False)
+            all_indexes_to_replace.extend(selected)
+        
+        stats['benign']['total'] += n_total
+        stats['benign']['removed'] += n_to_remove
+        stats['benign']['classes'][class_idx] = {'total': n_total, 'removed': n_to_remove}
+    
+    all_indexes_to_replace = np.array(all_indexes_to_replace)
+    
+    print(f"Unbalanced removal stats:")
+    print(f"  Malignant: {stats['malignant']['removed']}/{stats['malignant']['total']} ({malignant_proportion*100:.0f}%)")
+    print(f"  Benign: {stats['benign']['removed']}/{stats['benign']['total']} ({benign_proportion*100:.0f}%)")
+    print(f"  Total marked for removal: {len(all_indexes_to_replace)}")
+    
+    replace_indexes(dataset, all_indexes_to_replace, seed, only_mark)
+    
+    return stats
 
 
 if __name__ == "__main__":

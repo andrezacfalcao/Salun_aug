@@ -147,7 +147,7 @@ def setup_model_dataset(args):
         model.normalize = normalization
         return model, train_full_loader, val_loader, test_loader, marked_loader
     #elif args.dataset == "bloodmnist":
-    elif args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist"]:
+    elif args.dataset in ["bloodmnist", "pathmnist", "organamnist", "octmnist", "dermamnist"]:
         if args.dataset == "bloodmnist":
             classes = 8
         elif args.dataset == "pathmnist":
@@ -156,6 +156,8 @@ def setup_model_dataset(args):
             classes = 11
         elif args.dataset == "octmnist":
             classes = 4
+        elif args.dataset == "dermamnist":
+            classes = 7
             
         normalization = NormalizeByChannelMeanStd(
             mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]
@@ -175,7 +177,11 @@ def setup_model_dataset(args):
             shuffle=True,
             no_aug=args.no_aug,
             aug_mode=args.aug_mode,
-            dataset=args.dataset
+            dataset=args.dataset,
+            # Parâmetros para remoção desbalanceada (fairness analysis)
+            unbalanced_removal=getattr(args, 'unbalanced_removal', False),
+            malignant_proportion=getattr(args, 'malignant_proportion', 0.50),
+            benign_proportion=getattr(args, 'benign_proportion', 0.11),
         )
 
         if args.train_seed is None:
