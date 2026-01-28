@@ -178,7 +178,8 @@ def setup_model_dataset(args):
             no_aug=args.no_aug,
             aug_mode=args.aug_mode,
             dataset=args.dataset,
-            # Parâmetros para remoção desbalanceada (fairness analysis)
+            balanced_removal=getattr(args, 'balanced_removal', False),
+            balanced_proportion=getattr(args, 'balanced_proportion', 0.20),
             unbalanced_removal=getattr(args, 'unbalanced_removal', False),
             malignant_proportion=getattr(args, 'malignant_proportion', 0.50),
             benign_proportion=getattr(args, 'benign_proportion', 0.11),

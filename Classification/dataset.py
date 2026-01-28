@@ -792,6 +792,8 @@ def medmnist_dataloaders(
     aug_mode=None,
     im_size=64,
     dataset=None,
+    balanced_removal: bool = False,
+    balanced_proportion: float = 0.20,
     unbalanced_removal: bool = False,
     malignant_proportion: float = 0.50,
     benign_proportion: float = 0.11,
@@ -974,7 +976,19 @@ def medmnist_dataloaders(
             only_mark=only_mark,
         )
     
-    # Remoção desbalanceada para análise de fairness (DermaMNIST)
+    if balanced_removal:
+        if unbalanced_removal:
+            raise ValueError(
+                "Cannot use both balanced_removal and unbalanced_removal at the same time. "
+                "Choose one removal strategy."
+            )
+        replace_classes_balanced(
+            train_set,
+            proportion=balanced_proportion,
+            seed=seed - 1,
+            only_mark=only_mark,
+        )
+    
     if unbalanced_removal and dataset == "dermamnist":
         replace_classes_unbalanced(
             train_set,
@@ -1076,6 +1090,72 @@ def replace_class(
         print(f"Replacing indexes {indexes}")
     
     replace_indexes(dataset, indexes, seed, only_mark)
+
+
+def replace_classes_balanced(
+    dataset: torch.utils.data.Dataset,
+    proportion: float = 0.20,
+    seed: int = 0,
+    only_mark: bool = True,
+):
+    """
+    Remoção balanceada para análise de fairness.
+    Remove a MESMA proporção de amostras de CADA classe.
+    
+    Args:
+        dataset: Dataset a ser modificado
+        proportion: Proporção de amostras a remover de CADA classe (default: 20%)
+        seed: Semente para reprodutibilidade
+        only_mark: Se True, marca com labels negativos; se False, substitui dados
+    
+    Returns:
+        dict com estatísticas da remoção
+    
+    Exemplo:
+        Se temos 1000 amostras da classe A e 500 da classe B, e proportion=0.20:
+        - Remove 200 amostras da classe A (20% de 1000)
+        - Remove 100 amostras da classe B (20% de 500)
+    """
+    rng = np.random.RandomState(seed)
+    
+    try:
+        labels = np.array(dataset.targets)
+    except:
+        try:
+            labels = np.array(dataset.labels)
+        except:
+            labels = np.array(dataset._labels)
+    
+    unique_classes = np.unique(labels[labels >= 0])  # Ignora labels já marcados (negativos)
+    all_indexes_to_replace = []
+    stats = {'total_samples': len(labels), 'total_removed': 0, 'proportion': proportion, 'classes': {}}
+    
+    print(f"\n{'='*60}")
+    print(f"BALANCED REMOVAL - Removing {proportion*100:.0f}% from EACH class")
+    print(f"{'='*60}")
+    
+    for class_idx in unique_classes:
+        class_indexes = np.flatnonzero(labels == class_idx)
+        n_total = len(class_indexes)
+        n_to_remove = int(n_total * proportion)
+        
+        if n_to_remove > 0:
+            selected = rng.choice(class_indexes, size=n_to_remove, replace=False)
+            all_indexes_to_replace.extend(selected)
+        
+        stats['total_removed'] += n_to_remove
+        stats['classes'][int(class_idx)] = {'total': n_total, 'removed': n_to_remove}
+        print(f"  Class {class_idx}: {n_to_remove}/{n_total} samples removed ({proportion*100:.0f}%)")
+    
+    all_indexes_to_replace = np.array(all_indexes_to_replace)
+    
+    print(f"{'='*60}")
+    print(f"Total: {stats['total_removed']}/{stats['total_samples']} samples marked for removal")
+    print(f"{'='*60}\n")
+    
+    replace_indexes(dataset, all_indexes_to_replace, seed, only_mark)
+    
+    return stats
 
 
 def replace_classes_unbalanced(

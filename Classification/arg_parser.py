@@ -143,22 +143,34 @@ def parse_args():
     parser.add_argument("--mask_path", default=None, type=str, help="the path of saliency map")
 
     parser.add_argument(
+        "--balanced_removal",
+        action="store_true",
+        default=False,
+        help="Enable balanced removal for fairness analysis - removes same proportion from all classes"
+    )
+    parser.add_argument(
+        "--balanced_proportion",
+        type=float,
+        default=0.20,
+        help="Proportion of samples to remove from EACH class (default: 0.20 = 20%%)"
+    )
+    parser.add_argument(
         "--unbalanced_removal",
         action="store_true",
         default=False,
-        help="Enable unbalanced removal for fairness analysis (DermaMNIST)"
+        help="Enable unbalanced removal for fairness analysis - removes different proportions from malignant/benign classes (DermaMNIST)"
     )
     parser.add_argument(
         "--malignant_proportion",
         type=float,
         default=0.50,
-        help="Proportion of malignant samples to remove (default: 0.50 = 50%%)"
+        help="Proportion of malignant samples to remove when using unbalanced removal (default: 0.50 = 50%%)"
     )
     parser.add_argument(
         "--benign_proportion",
         type=float,
         default=0.11,
-        help="Proportion of benign samples to remove (default: 0.11 = 11%%)"
+        help="Proportion of benign samples to remove when using unbalanced removal (default: 0.11 = 11%%)"
     )
 
     ### Aug setting

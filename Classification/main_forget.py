@@ -5,6 +5,14 @@ from collections import OrderedDict
 
 import arg_parser
 import evaluation
+from evaluation.clinical_metrics import (
+    compute_all_metrics,
+    collect_predictions,
+    compute_fairness_metrics,
+    compute_risk_scenarios,
+    MALIGNANT_CLASSES,
+    BENIGN_CLASSES
+)
 import torch
 import torch.nn as nn
 import torch.optim
@@ -238,11 +246,71 @@ def main():
     print(f"MIA (Membership Inference Attack): {MIA:.2f}")
     unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
 
+    if args.dataset == "dermamnist":
+        print("\n" + "="*70)
+        print("CLINICAL RISK & FAIRNESS METRICS (DermaMNIST)")
+        print("="*70)
+        
+        device = next(model.parameters()).device
+        
+        y_true, y_pred = collect_predictions(test_loader, model, device)
+        
+        fairness = compute_fairness_metrics(y_true, y_pred)
+        risk = compute_risk_scenarios(y_true, y_pred)
+        
+        evaluation_result["fairness"] = fairness
+        evaluation_result["risk"] = risk
+        
+        print("\n--- Group Accuracy (Binarized: Malignant vs Benign) ---")
+        acc_malignant = fairness['acc_malignant'] * 100
+        acc_benign = fairness['acc_benign'] * 100
+        print(f"  Acc Malignant (classes {MALIGNANT_CLASSES}): {acc_malignant:.2f}%")
+        print(f"  Acc Benign (classes {BENIGN_CLASSES}): {acc_benign:.2f}%")
+        print(f"  Accuracy Gap: {fairness['accuracy_gap']*100:.2f}%")
+        print(f"  Worst-Group Accuracy: {fairness['worst_group_accuracy']*100:.2f}%")
+        
+        print("\n--- Fairness Metrics ---")
+        print(f"  EOD (Equalized Odds Difference): {fairness['equalized_odds_diff']:.4f}")
+        print(f"  TPR Malignant (Sensitivity): {fairness['tpr_malignant']:.4f}")
+        print(f"  TNR Benign (Specificity): {fairness['tnr_benign']:.4f}")
+        
+        print("\n--- Risk Scenario I (C_FN=1, C_FP=1) ---")
+        r1 = risk['scenario_I']
+        print(f"  Risk Global: {r1['risk_global']:.4f}")
+        print(f"  Risk Malignant: {r1['risk_malignant']:.4f}")
+        print(f"  Risk Benign: {r1['risk_benign']:.4f}")
+        
+        print("\n--- Risk Scenario II (C_FN=20, C_FP=1) ---")
+        r2 = risk['scenario_II']
+        print(f"  Risk Global: {r2['risk_global']:.4f}")
+        print(f"  Risk Malignant: {r2['risk_malignant']:.4f}")
+        print(f"  Risk Benign: {r2['risk_benign']:.4f}")
+        
+        print("="*70 + "\n")
+        
+        # Save updated results
+        unlearn.save_unlearn_checkpoint(model, evaluation_result, args)
+
     with open(os.path.join(args.save_dir, "results.txt"), "w") as f:
-        f.write(f"UA (Unlearning Accuracy): {UA:.2f}%")
-        f.write(f"RA (Remaining Accuracy): {RA:.2f}%")
-        f.write(f"TA (Testing Accuracy): {TA:.2f}%")
-        f.write(f"MIA (Membership Inference Attack): {MIA:.2f}")
+        f.write(f"UA (Unlearning Accuracy): {UA:.2f}%\n")
+        f.write(f"RA (Remaining Accuracy): {RA:.2f}%\n")
+        f.write(f"TA (Testing Accuracy): {TA:.2f}%\n")
+        f.write(f"MIA (Membership Inference Attack): {MIA:.2f}\n")
+        
+        if args.dataset == "dermamnist":
+            f.write(f"\n--- Group Accuracy ---\n")
+            f.write(f"Acc Malignant: {acc_malignant:.2f}%\n")
+            f.write(f"Acc Benign: {acc_benign:.2f}%\n")
+            f.write(f"Worst-Group Accuracy: {fairness['worst_group_accuracy']*100:.2f}%\n")
+            f.write(f"EOD: {fairness['equalized_odds_diff']:.4f}\n")
+            f.write(f"\n--- Risk Scenario I ---\n")
+            f.write(f"Risk Global: {r1['risk_global']:.4f}\n")
+            f.write(f"Risk Malignant: {r1['risk_malignant']:.4f}\n")
+            f.write(f"Risk Benign: {r1['risk_benign']:.4f}\n")
+            f.write(f"\n--- Risk Scenario II ---\n")
+            f.write(f"Risk Global: {r2['risk_global']:.4f}\n")
+            f.write(f"Risk Malignant: {r2['risk_malignant']:.4f}\n")
+            f.write(f"Risk Benign: {r2['risk_benign']:.4f}\n")
 
 
 if __name__ == "__main__":
